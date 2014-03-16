@@ -14,7 +14,7 @@ block content
          - Node.js
 
       ### DB Setup
-      In backend/db/sql.js enter your database credentials - currently defaulting to [user:root] [password:password] - quite secure. For more information on setting up a [MySQL DB](https://dev.mysql.com/tech-resources/articles/mysql_intro.html)
+      In app/db/sql.js enter your database credentials - currently defaulting to [user:root] [password:password] - quite secure. For more information on setting up a [MySQL DB](https://dev.mysql.com/tech-resources/articles/mysql_intro.html)
 
       ### SSL (optional) 
       For creating self-signed SSL certificates the guys at Heroku have an [awesome guide](https://devcenter.heroku.com/articles/ssl-certificate-self).
@@ -90,7 +90,7 @@ block content
     :markdown 
       If you have any questions about sequelize.js please refer to their thorough **[documentation](http://sequelizejs.com/docs/latest/installation)**.
 
-      Models are located in backend/models where you can modify the current user model along with model validations and a lot of other awesome stuff. I'm a big fan of Sequelize.js. 
+      Models are located in app/models where you can modify the current user model along with model validations and a lot of other awesome stuff. I'm a big fan of Sequelize.js. 
 
       The only drawback I've found with Sequelize is doing custom async model validations. This seems to be an issue that is fixed in newer versions (2.x.x branch) of Sequelize if you want to explore those routes. 
 
@@ -104,7 +104,7 @@ block content
 
       > - **Starterpack.js**
       
-      >    - **backend**
+      >    - **app**
       >       - **db**
       >           - _sql.js_ - Initialize database and sync models
       >       - **models**
