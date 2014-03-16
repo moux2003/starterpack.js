@@ -1,7 +1,8 @@
 var fs = require('fs'),
     express = require('express'),
     passport = require('passport'),
-    consolidate = require('consolidate');
+    dot = require('dot-emc'),
+    flash = require('connect-flash');
 
 /* //Uncomment if you want to enable ssl
 var configureSSL = function(app) {
@@ -13,18 +14,26 @@ var configureSSL = function(app) {
 */
 
 exports.configure = function(app) {
-    // app.engine('dot', consolidate.dot)
-    // app.set('view engine', 'dot');
-    // app.set('views', __dirname + '/../public/views/');
-    app.set('view engine', 'jade');
+    app.engine('dot', dot.init({
+        app: app,
+        fileExtension: 'dot',
+        // for development only
+        options: {
+            templateSettings: {
+                cache: false
+            }
+        }
+    }).__express);
+    app.set('view engine', 'dot');
+    // app.set('view engine', 'jade');
     app.set('views', __dirname + '/../public/views/');
 
     app.configure(function() {
         app.use(express.static(__dirname + '/../public/'));
         app.use(express.json());
 
-        //Using this for debug purposes
         app.use(function(req, res, next) {
+            // Using this for debug purposes
             console.log('handling request for: ' + req.url);
             next();
         });
@@ -35,6 +44,9 @@ exports.configure = function(app) {
         }));
         app.use(passport.initialize());
         app.use(passport.session());
+        // use connect-flash for flash messages stored in session
+        // we use these keys: 'info', 'warning', 'error', 'success'
+        app.use(flash());
     });
 
     /* //Uncomment if you want to enable ssl

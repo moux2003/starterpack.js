@@ -139,12 +139,13 @@ exports.localDelete = function(req, res) {
                 res.redirect('/');
             })
     }
-}
+};
 
 // Local authentication redirects
 exports.localAuthentication = passport.authenticate('local', {
     failureRedirect: '/login',
-    successRedirect: '/home'
+    successRedirect: '/home',
+    failureFlash: true
 });
 
 // // Unlink social account from current user

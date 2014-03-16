@@ -32,84 +32,120 @@
  */
 
 exports.home = function(req, res) {
-	res.render('home', {
-    title: 'Home',
-    nav_class: 'navbar-home',
-    nav_links: [
-      { title: 'Home', href: '/home'},
-    	{ title: 'Setup', href: '/setup'},
-    	{ title: 'Update User', href: '/user/update'},
-      { title: 'GitHub Repo', href: 'https://github.com/moux2003/starterpack.js'},
-		  { title: 'Logout', href: '/logout'}
-    ]
-  });
+    res.render('home', {
+        title: 'Home',
+        nav_class: 'navbar-home',
+        nav_links: [{
+            title: 'Home',
+            href: '/home'
+        }, {
+            title: 'Setup',
+            href: '/setup'
+        }, {
+            title: 'Update User',
+            href: '/user/update'
+        }, {
+            title: 'GitHub Repo',
+            href: 'https://github.com/moux2003/starterpack.js'
+        }, {
+            title: 'Logout',
+            href: '/logout'
+        }]
+    });
 };
 
 exports.setup = function(req, res) {
-	res.render('setup', {
-    title: 'Setup',
-    nav_class: 'navbar-setup',
-    nav_links: [
-    	{ title: 'Home', href: '/home'},
-      { title: 'Setup', href: '/setup'},
-    	{ title: 'Update User', href: '/user/update'},
-      { title: 'GitHub Repo', href: 'https://github.com/moux2003/starterpack.js'},
-		  { title: 'Logout', href: '/logout'}
-    ]
-  });
+    res.render('setup', {
+        title: 'Setup',
+        nav_class: 'navbar-setup',
+        nav_links: [{
+            title: 'Home',
+            href: '/home'
+        }, {
+            title: 'Setup',
+            href: '/setup'
+        }, {
+            title: 'Update User',
+            href: '/user/update'
+        }, {
+            title: 'GitHub Repo',
+            href: 'https://github.com/moux2003/starterpack.js'
+        }, {
+            title: 'Logout',
+            href: '/logout'
+        }]
+    });
 };
 
 exports.login = function(req, res) {
-	res.render('login', {
-    	title: 'Login',
-      nav_class: 'navbar-login',
-    	nav_links: [
-        { title: 'Home', href: '/home'},
-    		{ title: 'Create User', href: '/create'},
-        { title: 'GitHub Repo', href: 'https://github.com/moux2003/starterpack.js'},
-    	],
-      user: req.user
-  	});
+    res.render('login', {
+        title: 'Login',
+        messages: req.flash(),
+        nav_class: 'navbar-login',
+        nav_links: [{
+            title: 'Home',
+            href: '/home'
+        }, {
+            title: 'Create User',
+            href: '/create'
+        }, {
+            title: 'GitHub Repo',
+            href: 'https://github.com/moux2003/starterpack.js'
+        }, ],
+        user: req.user
+    });
 };
 
 exports.createUser = function(req, res) {
-	res.render('create', {
-    	title: 'Create User',
-	    coffeescript: [
-	    	{js: '/js/postHelper.js'}
-	    ],
-    	nav_links: [
-    		{ title: 'Login', href: '/login'},
-        { title: 'GitHub Repo', href: 'https://github.com/moux2003/starterpack.js'},
-    	]
-  	});
+    res.render('create', {
+        title: 'Create User',
+        coffeescript: [{
+            js: '/js/postHelper.js'
+        }],
+        nav_links: [{
+            title: 'Login',
+            href: '/login'
+        }, {
+            title: 'GitHub Repo',
+            href: 'https://github.com/moux2003/starterpack.js'
+        }, ]
+    });
 };
 
 exports.updateUser = function(req, res) {
-  res.render('update', {
-      title: 'Update User',
-      coffeescript: [
-        {js: '/js/postHelper.js'}
-      ],
-      nav_links: [
-        { title: 'Home', href: '/home'},
-        { title: 'Setup', href: '/setup'},
-        { title: 'Update User', href: '/user/update'},
-        { title: 'GitHub Repo', href: 'https://github.com/moux2003/starterpack.js'},
-        { title: 'Logout', href: '/logout'}
-      ],
-      user: req.user
+    res.render('update', {
+        title: 'Update User',
+        coffeescript: [{
+            js: '/js/postHelper.js'
+        }],
+        nav_links: [{
+            title: 'Home',
+            href: '/home'
+        }, {
+            title: 'Setup',
+            href: '/setup'
+        }, {
+            title: 'Update User',
+            href: '/user/update'
+        }, {
+            title: 'GitHub Repo',
+            href: 'https://github.com/moux2003/starterpack.js'
+        }, {
+            title: 'Logout',
+            href: '/logout'
+        }],
+        user: req.user
     });
 };
 
 exports.logout = function(req, res) {
-	req.logout();
-	res.redirect('/');
+    req.logout();
+    res.redirect('/');
 };
 
 exports.catchall = function(req, res) {
-	res.render('404', {
-    	title: '404',
-	    hide_navbar:true
-  	});
+    res.render('404', {
+        title: '404',
+        hide_navbar: true
+    });
 };
