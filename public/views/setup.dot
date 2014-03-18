@@ -1,0 +1,222 @@
+{{##def.content:
+<h1>Starterpack Setup</h1>
+<hr/>
+<h2>General</h2>
+
+<h3>Prerequisites</h3>
+<ul>
+	<li>MySQL</li>
+	<li>SASS</li>
+	<li>Node.js</li>
+</ul>
+
+<h3>DB Setup</h3>
+
+<p>
+	In app/db/sql.js enter your database credentials - currently defaulting to [user:root] [password:password] - quite secure. For more information on setting up a <a href="https://dev.mysql.com/tech-resources/articles/mysql_intro.html">MySQL DB</a>
+
+</p>
+
+
+<h3>SSL (optional)</h3>
+<p>
+	For creating self-signed SSL certificates the guys at Heroku have an <a href="https://devcenter.heroku.com/articles/ssl-certificate-self">awesome guide</a>
+	.
+</p>
+
+
+<h3>Tips</h3>
+<p>
+	Depending on your IDE/editor/environment you may already have SASS/Coffeescript compilation setup on save of a file. For those who don&#39;t I would highly recommend Sublime Text and it&#39;s package manager. For more information about <a href="http://sass-lang.com/">SASS</a>
+ and <a href="http://coffeescript.org/">CoffeeScript</a>
+ . I would highly recommend looking into an automatic build environment for both SASS and CoffeeScript, it will save you lots of time and a few headaches. 
+</p>
+
+
+<blockquote>
+	<p>
+	<strong>Coffeescript compilation</strong>
+	: <em>&#39;coffee -c Starterpack.js/views/js/postHelper.coffee&#39;</em>
+	</p>
+	<p>
+		<strong>SASS compilation</strong>
+		: <em>&#39;sass --watch path/sass-directory:path/css-directory&#39;</em>
+	 or the much less elegant way: <em>&#39;sass custom</em>
+	 styles.scss &gt; custom<em>styles.css&#39;</em>
+	</p>
+</blockquote>
+
+
+<h3>Getting Started</h3>
+<p>
+	To get started there are a few things you&#39;ll need to do
+</p>
+
+
+<ul>
+	<li>Make sure everything is installed (SASS, npm install, mySQL, etc)</li>
+	<li>Update sql.js with your database credentials</li>
+	<li>Update secrets.js with your application specific secrets</li>
+	<li>
+		<p>(optional) Generate certificate.pem, certrequest.csr and privatekey.pem for self-signed ssl</p>
+	</li>
+</ul>
+<br/><hr/><br/>
+
+<h2>Passport.js</h2>
+<p>
+	Here&#39;s a great article that explains the authentication flow of <strong><a href="http://toon.io/articles/understanding-passportjs-authentication-flow/">Passport.js</a></strong> , please refer to this if you have any questions about application flow.
+</p>
+
+<p>
+	Currently only the user id is being serialized via Passport which means that for each route there is a db hit in order to populate the req.user. This is less than ideal when you want to hit a route that doesn&#39;t access any data from the user model, it results in an unnecessary db query. There are ways around this issue, such as serializing the entire user model but I have opted for the solution of serializing only the user id. 
+</p>
+
+<p>
+	For social authentication, the approach is fairly simple. The API keys for social services are stored in db/passport/secrets.js, you will need to populate these with your own keys. Instructions on populating these keys please refer to the following sections for each service. I&#39;ll try to keep these instructions as up to date as possible.
+</p>
+
+<br/><hr/><br/>
+
+<h2>Sequelize.js</h2>
+<p>
+	If you have any questions about sequelize.js please refer to their thorough <strong><a href="http://sequelizejs.com/docs/latest/installation">documentation</a></strong>.
+</p>
+
+<p>
+	Models are located in app/models where you can modify the current user model along with model validations and a lot of other awesome stuff. I&#39;m a big fan of Sequelize.js. 
+</p>
+
+<p>
+	The only drawback I&#39;ve found with Sequelize is doing custom async model validations. This seems to be an issue that is fixed in newer versions (2.x.x branch) of Sequelize if you want to explore those routes. 
+</p>
+<br/><hr/><br/>
+
+<h2>Project Layout</h2>
+<p>
+	Quick overview of project layout and where to find what you&#39;re looking for. 
+</p>
+
+<blockquote>
+	<ul>
+		<li>
+			<p><strong>Starterpack.js</strong></p>
+			<ul>
+				<li>
+					<p><strong>app</strong></p>
+					<ul>
+						<li>
+							<strong>db</strong>
+							<ul>
+								<li>
+									<em>sql.js</em> - Initialize database and sync models
+		 						</li>
+							</ul>
+						</li>
+						<li>
+							<strong>models</strong>
+							<ul>
+								<li><em>user.js</em> - User model </li>
+							</ul>
+						</li>
+						<li>
+							<strong>passport</strong>
+							<ul>
+								<li>
+									<em>passport.js</em> - Local authorization strategy along with Passport.js specific functions (serializeUser/deserializeUse).
+								</li>
+							</ul>
+						</li>
+						<li>
+							<p>
+								<strong>routes</strong>
+							</p>
+							<ul>
+								<li>
+									<em>application.js</em> - application specific routes (home, login, setup, etc). Broken out of router to keep it clean and managed.
+								</li>
+	 							<li>
+	 								<p>
+	 									<em>authentication.js</em> - authentication routes, social account linking/unlinking etc. 
+									</p>
+								</li>
+							</ul>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<strong>config</strong>
+					</p>
+					<ul>
+						<li>
+							<strong>ssl</strong> - optional directory to store ssl certificates
+						</li>
+	 					<li>
+	 						<p>
+	 							<em>config.js</em> - application configuration - initializing passport, sessions, jade view engine, etc.
+	 						</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<strong>public</strong>
+					</p>
+					<ul>
+						<li>
+							<strong>css</strong> - currently using yeti bootstrap theme with customizations in custom_styles.scss
+						</li>
+	 					<li>
+	 						<strong>js</strong> - bootstrap, jquery, and postHelper - a helper function for ajax posts
+	 					</li>
+	 					<li>
+	 						<p>
+	 							<strong>views</strong> - jade views inheriting from layout.jade and navigation.jade
+							</p>
+						</li>
+					</ul>
+				</li>
+				<li>
+					<p>
+						<em>router.js</em> - node app, where we initialize server with configurations and initialize routes.
+					</p>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</blockquote>
+
+<br/><hr/><br/>
+
+<h2>About</h2>
+<blockquote>
+	<p>
+		I needed a super-awesome Node.js/SQL stack. So I made one.
+	</p>
+	<p>
+		-Nick Alto
+	</p>
+</blockquote>
+
+<p>
+	For <strong>kudos</strong>
+ 	and <strong>positive feedback</strong>
+ 	feel free to email: 
+</p>
+
+<p>
+	<strong><a href="mailto:nickalto@gmail.com">nickalto@gmail.com</a></strong>
+</p>
+
+<p>
+	For <strong>rants</strong>
+	, <strong>negative feedback</strong>
+ 	and everything else email:
+</p>
+
+<p>
+	<strong><a href="mailto:totallylegitemailaddress@aol.com">totallylegitemailaddress@aol.com</a></strong>
+</p>
+#}}
+{{# def.include('layout') }}
