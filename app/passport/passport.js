@@ -43,9 +43,10 @@ function isEmptyOrNull(value) {
 // Create a local user
 exports.localAuthentication = function(req, res) {
     var password = null;
+
     async.waterfall([
         // make sure username has not already been taken
-        function validateUsername(callback) {
+        function validateUsername(nextStep) {
             User.find({
                 where: {
                     username: req.body.username
@@ -53,51 +54,54 @@ exports.localAuthentication = function(req, res) {
             })
                 .done(function(error, user) {
                     if (user) {
-                        return res.json({
-                            error: {
-                                username: 'Username is already being used'
-                            }
+                        nextStep({
+                            message: 'Username is already being used'
                         });
                     }
-                    callback(null);
+                    nextStep(null);
                 });
         },
-
         // encrypt password and pass it to create user
-        function encryptPassword(callback) {
+        function encryptPassword(nextStep) {
             if (req.body.password === req.body.confirm_password) {
-                exports.hashPassword(req.body.password, callback)
+                exports.hashPassword(req.body.password, nextStep)
             } else {
-                return res.json({
-                    error: {
-                        confirm_password: 'Passwords do not match'
-                    }
+                nextStep({
+                    message: 'Passwords do not match'
                 });
             }
         },
-
         // create user with hashed password
-        function createUser(hashed_password, callback) {
+        function createUser(hashedPassword, complete) {
             User.create({
                 username: req.body.username,
                 first_name: req.body.first_name,
                 email_address: req.body.email_address,
                 last_name: req.body.last_name,
-                password: hashed_password
+                password: hashedPassword
             })
                 .success(function(user) {
                     req.user = req.session.user = user;
-                    res.json({
-                        redirect: '/login'
+                    complete(null, {
+                        message: 'User successfully created, you can now login'
                     });
                 })
                 .error(function(err) {
-                    return res.json({
-                        error: err
+                    complete({
+                        message: err
                     });
-                })
+                });
+            complete(null, 'done');
         }
-    ]);
+    ], function finalize(error, result) {
+        if (error) {
+            req.flash('error', error.message);
+            res.redirect('/create');
+        } else {
+            req.flash('success', result.message);
+            res.redirect('/login');
+        }
+    });
 };
 
 //Sign in using username and password.

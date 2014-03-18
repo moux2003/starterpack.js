@@ -99,6 +99,7 @@ exports.login = function(req, res) {
 exports.createUser = function(req, res) {
     res.render('create', {
         title: 'Create User',
+        messages: req.flash(),
         coffeescript: [{
             js: '/js/postHelper.js'
         }],
@@ -115,6 +116,7 @@ exports.createUser = function(req, res) {
 exports.updateUser = function(req, res) {
     res.render('update', {
         title: 'Update User',
+        messages: req.flash(),
         coffeescript: [{
             js: '/js/postHelper.js'
         }],
