@@ -56,12 +56,12 @@
 <ul>
 	<li>Make sure everything is installed (SASS, npm install, mySQL, etc)</li>
 	<li>Update sql.js with your database credentials</li>
-	<li>Update secrets.js with your application specific secrets</li>
 	<li>
 		<p>(optional) Generate certificate.pem, certrequest.csr and privatekey.pem for self-signed ssl</p>
 	</li>
 </ul>
-<br/><hr/><br/>
+
+<hr/>
 
 <h2>Passport.js</h2>
 <p>
@@ -72,11 +72,7 @@
 	Currently only the user id is being serialized via Passport which means that for each route there is a db hit in order to populate the req.user. This is less than ideal when you want to hit a route that doesn&#39;t access any data from the user model, it results in an unnecessary db query. There are ways around this issue, such as serializing the entire user model but I have opted for the solution of serializing only the user id. 
 </p>
 
-<p>
-	For social authentication, the approach is fairly simple. The API keys for social services are stored in db/passport/secrets.js, you will need to populate these with your own keys. Instructions on populating these keys please refer to the following sections for each service. I&#39;ll try to keep these instructions as up to date as possible.
-</p>
-
-<br/><hr/><br/>
+<hr/>
 
 <h2>Sequelize.js</h2>
 <p>
@@ -90,7 +86,8 @@
 <p>
 	The only drawback I&#39;ve found with Sequelize is doing custom async model validations. This seems to be an issue that is fixed in newer versions (2.x.x branch) of Sequelize if you want to explore those routes. 
 </p>
-<br/><hr/><br/>
+
+<hr/>
 
 <h2>Project Layout</h2>
 <p>
@@ -154,7 +151,7 @@
 						</li>
 	 					<li>
 	 						<p>
-	 							<em>config.js</em> - application configuration - initializing passport, sessions, jade view engine, etc.
+	 							<em>config.js</em> - application configuration - initializing passport, sessions, dot view engine, etc.
 	 						</p>
 						</li>
 					</ul>
@@ -172,7 +169,7 @@
 	 					</li>
 	 					<li>
 	 						<p>
-	 							<strong>views</strong> - jade views inheriting from layout.jade and navigation.jade
+	 							<strong>views</strong> - dot views inheriting from layout.dot and navigation.dot (also include messages.dot for flash messages display)
 							</p>
 						</li>
 					</ul>
@@ -187,36 +184,12 @@
 	</ul>
 </blockquote>
 
-<br/><hr/><br/>
+<hr/>
 
 <h2>About</h2>
 <blockquote>
-	<p>
-		I needed a super-awesome Node.js/SQL stack. So I made one.
-	</p>
-	<p>
-		-Nick Alto
-	</p>
+  <p>I needed a super-awesome Node.js/SQL stack. So I made one.</p>
+  <footer>Nick Alto <cite title="Creator of the original work">Creator of the original work</cite></footer>
 </blockquote>
-
-<p>
-	For <strong>kudos</strong>
- 	and <strong>positive feedback</strong>
- 	feel free to email: 
-</p>
-
-<p>
-	<strong><a href="mailto:nickalto@gmail.com">nickalto@gmail.com</a></strong>
-</p>
-
-<p>
-	For <strong>rants</strong>
-	, <strong>negative feedback</strong>
- 	and everything else email:
-</p>
-
-<p>
-	<strong><a href="mailto:totallylegitemailaddress@aol.com">totallylegitemailaddress@aol.com</a></strong>
-</p>
 #}}
 {{# def.include('layout') }}
