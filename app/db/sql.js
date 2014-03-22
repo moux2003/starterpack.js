@@ -18,11 +18,17 @@ module.exports = function() {
         user: sql.user,
         password: sql.password
     });
-    sql.db.query('CREATE DATABASE IF NOT EXISTS :db', {
-        db: sql.dbname
-    }).on('result', function(res) {
-        sql.db.end();
-    });
+    sql.db.query('CREATE DATABASE IF NOT EXISTS ' + sql.dbname)
+        .on('result', function(res) {
+            res.on('error', function(err) {
+                console.log('Client error: ' + err);
+            }).on('end', function(err) {
+                console.log('Database ready');
+            })
+        }).on('end', function() {
+            console.log('Done with db check');
+        });
+    sql.db.end();
 
     var sequelize = exports.sequelize = new Sequelize(sql.dbname, sql.user, sql.password, {
         dialect: 'mariadb'
