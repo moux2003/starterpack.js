@@ -2,6 +2,7 @@ var passport = require('passport'),
     bcrypt = require('bcrypt'),
     async = require('async'),
     LocalStrategy = require('passport-local').Strategy,
+    Sequelize = require('sequelize'),
     User = require('../db/sql').User;
 
 //Passport required serialization
@@ -104,10 +105,10 @@ exports.localAuthentication = function(req, res) {
     });
 };
 
-//Sign in using username and password.
-passport.use(new LocalStrategy(function(username, password, done) {
+//Sign in using username or email and password.
+passport.use(new LocalStrategy(function(usernameOrEmail, password, done) {
     async.waterfall([
-        // look for user with given username
+        // look for user with given username or email
         function findUser(callback) {
 
             function error() {
@@ -117,9 +118,11 @@ passport.use(new LocalStrategy(function(username, password, done) {
             }
 
             User.find({
-                where: {
-                    username: username
-                }
+                where: Sequelize.or({
+                    username: usernameOrEmail
+                }, {
+                    email_address: usernameOrEmail
+                })
             }).then(function(user) {
                 if (user !== null) {
                     callback(null, user);

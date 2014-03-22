@@ -35,10 +35,6 @@
 
 <blockquote>
 	<p>
-	<strong>Coffeescript compilation</strong>
-	: <em>&#39;coffee -c Starterpack.js/views/js/postHelper.coffee&#39;</em>
-	</p>
-	<p>
 		<strong>SASS compilation</strong>
 		: <em>&#39;sass --watch path/sass-directory:path/css-directory&#39;</em>
 	 or the much less elegant way: <em>&#39;sass custom</em>
@@ -165,7 +161,7 @@
 							<strong>css</strong> - currently using yeti bootstrap theme with customizations in custom_styles.scss
 						</li>
 	 					<li>
-	 						<strong>js</strong> - bootstrap, jquery, and postHelper - a helper function for ajax posts
+	 						<strong>js</strong> - bootstrap, jquery
 	 					</li>
 	 					<li>
 	 						<p>

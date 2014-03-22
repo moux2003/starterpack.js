@@ -1,6 +1,4 @@
 /*
- * Jade is bad, pass whatever data you want into the view. Just like that.
- * Current setup
  *
  * nav_class = given class to add to nav-bar for custom styles, etc
      nav_class: 'navbar-home',
@@ -17,11 +15,7 @@
  * user = if you need to pass in the current user to the partial
        user: req.user
  *
- * coffeescript = array of javascript to pass into a given view
-      coffeescript: [
-        {js: '/js/postHelper.js'}
-      ],
-  *
+
   * styles = array of styles to pass into a given view
         styles: [
         {css: '/css/somefile.css'}
@@ -100,9 +94,6 @@ exports.createUser = function(req, res) {
     res.render('create', {
         title: 'Create User',
         messages: req.flash(),
-        coffeescript: [{
-            js: '/js/postHelper.js'
-        }],
         nav_links: [{
             title: 'Login',
             href: '/login'
@@ -117,9 +108,6 @@ exports.updateUser = function(req, res) {
     res.render('update', {
         title: 'Update User',
         messages: req.flash(),
-        coffeescript: [{
-            js: '/js/postHelper.js'
-        }],
         nav_links: [{
             title: 'Home',
             href: '/home'
