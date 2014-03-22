@@ -25,7 +25,6 @@ exports.configure = function(app) {
         }
     }).__express);
     app.set('view engine', 'dot');
-    // app.set('view engine', 'jade');
     app.set('views', __dirname + '/../public/views/');
 
     app.configure(function() {

@@ -19,33 +19,9 @@
 </div>
 </div>
 <div class="form-group">
-	<label for="username" class="col-sm-3 control-label">Username</label>
-<div class="col-sm-9">
-	<input type="text" id="username" placeholder="Username" required="" autofocus="" autocomplete="off" name="username" value="{{= it.user.username }}" class="form-control"/>
-</div>
-</div>
-<div class="form-group">
    <label for="email_address" class="col-sm-3 control-label">Email</label>
 <div class="col-sm-9">
 	<input type="text" id="email_address" placeholder="Email address" required="" autofocus="" autocomplete="off" name="email_address" value="{{= it.user.email_address }}" class="form-control"/>
-</div>
-</div>
-<div class="form-group">
-	<label for="gender" class="col-sm-3 control-label">Gender</label>
-<div class="col-sm-9">
-	<input type="text" id="gender" placeholder="Gender" autofocus="" autocomplete="off" name="gender" value="{{= it.user.gender }}" class="form-control"/>
-</div>
-</div>
-<div class="form-group">
-	<label for="location" class="col-sm-3 control-label">Location</label>
-<div class="col-sm-9">
-	<input type="text" id="location" placeholder="Location" autofocus="" autocomplete="off" name="location" value="{{= it.user.location }}" class="form-control"/>
-</div>
-</div>
-<div class="form-group">
-	<label for="picture" class="col-sm-3 control-label">Picture</label>
-<div class="col-sm-9">
-	<input type="text" id="picture" placeholder="Picture Url" autofocus="" autocomplete="off" name="picture" value="{{= it.user.picture }}" class="form-control"/>
 </div>
 </div>
 <button type="submit" class="btn btn-lg btn-primary btn-block sign-in update-user">Update</button>

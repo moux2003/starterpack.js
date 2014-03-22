@@ -1,8 +1,10 @@
 var auth = require('../passport/passport'),
     bcrypt = require('bcrypt'),
-    User = require('../db/sql').User,
     async = require('async'),
-    passport = require('passport');
+    User = require('../db/sql').User,
+    Sequelize = require('sequelize'),
+    passport = require('passport'),
+    appRoute = require('../routes/application');
 
 exports.isAuthenticated = function(req, res, next) {
     if (req.user) return next();
@@ -17,52 +19,59 @@ exports.localCreate = function(req, res) {
 // Update user's data
 exports.localUpdate = function(req, res) {
     var user = req.user;
-    async.waterfall([
 
-        // Initial check to see if username is changed to an already existing user in db, if so throw error
-        function validateUsername(callback) {
+    async.waterfall([
+        // make sure username and email have not already been taken
+        function validateEmail(nextStep) {
             User.find({
-                where: {
-                    username: req.body.username
-                }
+                where: Sequelize.and({
+                    email_address: req.body.email_address
+                }, {
+                    email_address: {
+                        ne: user.email_address
+                    }
+                })
             })
-                .done(function(error, found_user) {
-                    if (user && found_user && found_user.id != user.id) {
-                        return res.json({
-                            error: {
-                                username: 'Username is already being used'
-                            }
+                .done(function(error, user) {
+                    if (user) {
+                        nextStep({
+                            message: 'Email is already being used'
                         });
                     }
-                    callback(null);
+                    nextStep(null);
                 });
         },
-
         // Further validations for updating can be put here, otherwise update user
-        function updateUser(callback) {
+        function updateUser(complete) {
             if (user) {
                 user.updateAttributes({
                     first_name: req.body.first_name,
                     last_name: req.body.last_name,
-                    username: req.body.username,
                     email_address: req.body.email_address,
-                    gender: req.body.gender,
-                    location: req.body.location,
-                    picture: req.body.picture
                 })
                     .success(function() {
-                        return res.json({
-                            redirect: '/user/update'
-                        });
+                        complete(null)
                     })
                     .failure(function(error) {
-                        return res.json({
-                            error: error
+                        complete({
+                            message: 'Failed to update profile.'
                         });
                     })
+            } else {
+                return complete({
+                    message: 'Seems you are not logged in.'
+                });
             }
         }
-    ]);
+    ], function finalize(error) {
+        if (error) {
+            req.flash('error', error.message);
+            appRoute.updateUser(req, res);
+        } else {
+            req.flash('success', 'Profile updated.');
+            appRoute.updateUser(req, res);
+        }
+    });
 };
 
 // Update local user's password

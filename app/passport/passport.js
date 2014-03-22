@@ -3,16 +3,21 @@ var passport = require('passport'),
     async = require('async'),
     LocalStrategy = require('passport-local').Strategy,
     Sequelize = require('sequelize'),
-    User = require('../db/sql').User;
+    User = require('../db/sql').User
+    appRoute = require('../routes/application');
 
 //Passport required serialization
 passport.serializeUser(function(user, done) {
-    done(null, user.id);
+    done(null, user.uuid);
 });
 
 // passport required deserialize find user given id from serialize
-passport.deserializeUser(function(id, done) {
-    User.find(id)
+passport.deserializeUser(function(uuid, done) {
+    User.find({
+        where: {
+            uuid: uuid
+        }
+    })
         .success(function(user) {
             done(null, user);
         })
@@ -46,12 +51,14 @@ exports.localAuthentication = function(req, res) {
     var password = null;
 
     async.waterfall([
-        // make sure username has not already been taken
-        function validateUsername(nextStep) {
+        // make sure username and email have not already been taken
+        function validateUsernameAndEmail(nextStep) {
             User.find({
-                where: {
+                where: Sequelize.or({
                     username: req.body.username
-                }
+                }, {
+                    email_address: req.body.email_address
+                })
             })
                 .done(function(error, user) {
                     if (user) {
@@ -100,7 +107,7 @@ exports.localAuthentication = function(req, res) {
             res.redirect('/create');
         } else {
             req.flash('success', result.message);
-            res.redirect('/login');
+            appRoute.login(req, res);
         }
     });
 };
@@ -109,8 +116,7 @@ exports.localAuthentication = function(req, res) {
 passport.use(new LocalStrategy(function(usernameOrEmail, password, done) {
     async.waterfall([
         // look for user with given username or email
-        function findUser(callback) {
-
+        function findUser(nextStep) {
             function error() {
                 return done(null, false, {
                     message: 'User not found.'
@@ -125,35 +131,43 @@ passport.use(new LocalStrategy(function(usernameOrEmail, password, done) {
                 })
             }).then(function(user) {
                 if (user !== null) {
-                    callback(null, user);
+                    nextStep(null, user);
                 } else {
-                    return error();
+                    return nextStep({
+                        message: 'User not found'
+                    });
                 }
             }, function(error) {
-                return error();
+                return nextStep({
+                    message: 'User not found'
+                });
             })
         },
-
         // make sure password is valid
-        function comparePassword(user, callback) {
-
-            function error() {
-                return done(null, false, {
+        function comparePassword(user, complete) {
+            if (!user) {
+                complete({
                     message: 'Invalid email or password.'
                 });
+            } else {
+                bcrypt.compare(password, user.password, function(err, match) {
+                    if (match) {
+                        complete(null, user);
+                    } else {
+                        complete({
+                            message: 'Invalid email or password.'
+                        });
+                    }
+                });
             }
-
-            if (!user) {
-                return error();
-            }
-
-            bcrypt.compare(password, user.password, function(err, match) {
-                if (match) {
-                    return done(null, user);
-                } else {
-                    return error();
-                }
-            });
         }
-    ]);
+    ], function finalize(error, user) {
+        if (error) {
+            done(null, false, {
+                message: error.message
+            });
+        } else {
+            done(null, user);
+        }
+    });
 }));

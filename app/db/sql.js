@@ -1,6 +1,7 @@
 module.exports = function() {
     var MariaClient = require('mariasql'),
         Sequelize = require('sequelize'),
+        bcrypt = require('bcrypt'),
 
         /* Update database credentials here
          * based on your own system's configuration
@@ -18,6 +19,7 @@ module.exports = function() {
         user: sql.user,
         password: sql.password
     });
+
     sql.db.query('CREATE DATABASE IF NOT EXISTS ' + sql.dbname)
         .on('result', function(res) {
             res.on('error', function(err) {
@@ -27,8 +29,8 @@ module.exports = function() {
             })
         }).on('end', function() {
             console.log('Done with db check');
+            sql.db.end();
         });
-    sql.db.end();
 
     var sequelize = exports.sequelize = new Sequelize(sql.dbname, sql.user, sql.password, {
         dialect: 'mariadb'
@@ -42,6 +44,31 @@ module.exports = function() {
 
     // include models here
     sql.User = require('../models/user');
+
+    // create user admin with password admin if necessary
+    bcrypt.genSalt(10, function(err, salt) {
+        if (err) {
+            console.log('sql.js: bcrypt salting error');
+        } else {
+            bcrypt.hash('admin', salt, function(error, password) {
+                if (error) {
+                    console.log('sql.js: bcrypt hashing error');
+                } else {
+                    sql.User.findOrCreate({
+                        username: 'admin'
+                    }, {
+                        password: password,
+                        email_address: 'admin@tobedefine.com'
+                    })
+                        .success(function(user, created) {
+                            if (created) {
+                                console.log('admin user created')
+                            }
+                        });
+                }
+            });
+        }
+    });
 
     return sql;
 }();
