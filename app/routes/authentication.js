@@ -147,19 +147,3 @@ exports.localAuthentication = passport.authenticate('local', {
     successRedirect: '/home',
     failureFlash: true
 });
-
-// // Unlink social account from current user
-// exports.unlink = function(req, res, attributes) {
-//     var user = req.user;
-//     if (user) {
-//         user.updateAttributes(attributes)
-//             .success(function() {
-//                 res.redirect('/user/update');
-//             })
-//             .failure(function(error) {
-//                 return res.json({
-//                     error: error
-//                 });
-//             });
-//     }
-// };
